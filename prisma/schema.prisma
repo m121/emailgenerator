@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model UserApiLimit{
+  id String @id @default(cuid())
+  userId String @unique
+  count Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserSubscription {
+  id        String      @id @default(cuid())
+  userId    String   @unique
+  lemonCustomerId       String?   @unique @map(name: "lemon_customer_id")
+  lemonSubscriptionId   String?   @unique @map(name: "lemon_subscription_id")
+  lemonVariantId          String?   @map(name: "lemon_variant_id")
+  lemonCurrentPeriodEnd DateTime? @map(name: "lemon_current_period_end")
+  lemonSubscriptionStatus String? 
+ 
+}
+
+
+
+
+model WebhookEvent {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  eventName       String
+  processed       Boolean   @default(false)
+  body            Json
+  processingError String?
+}
